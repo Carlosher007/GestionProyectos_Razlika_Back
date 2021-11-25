@@ -30,7 +30,6 @@ const tiposProyecto = gql`
     Proyectos: [Proyecto]
     Proyecto(_id: String!): Proyecto
   }
-
   type Mutation {
     crearProyecto(
       nombre: String!
