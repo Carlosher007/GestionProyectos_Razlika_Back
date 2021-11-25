@@ -6,6 +6,10 @@ const resolversProyecto = {
       const proyectos = await ProjectModel.find().populate('avances').populate('inscripciones');
       return proyectos;
     },
+    Proyecto: async (parent, args) => {
+      const proyecto = await ProjectModel.findOne({ _id: args._id }).populate('avances').populate('inscripciones');
+      return proyecto;
+    },
   },
   Mutation: {
     crearProyecto: async (parent, args) => {
