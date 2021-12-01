@@ -2,14 +2,6 @@ import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 // import { Enum_Rol, Enum_EstadoUsuario } from '../enums/enums';
 
-// interface User {
-//   correo: string;
-//   identificacion: string;
-//   nombre: string;
-//   apellido: string;
-//   rol: Enum_Rol;
-//   estado: Enum_EstadoUsuario;
-// }
 
 const userSchema = new Schema({
   correo: {
@@ -57,6 +49,25 @@ const userSchema = new Schema({
     enum: ['PENDIENTE', 'AUTORIZADO', 'NO_AUTORIZADO'],
     default: 'PENDIENTE',
   },
+});
+
+userSchema.virtual('proyectosLiderados', {
+  ref: 'Proyecto',
+  localField: '_id',
+  foreignField: 'lider',
+});
+
+
+userSchema.virtual('avancesCreados', {
+  ref: 'Avance',
+  localField: '_id',
+  foreignField: 'creadoPor',
+});
+
+userSchema.virtual('inscripciones', {
+  ref: 'Inscripcion',
+  localField: '_id',
+  foreignField: 'estudiante',
 });
 
 const UserModel = model('User', userSchema);
