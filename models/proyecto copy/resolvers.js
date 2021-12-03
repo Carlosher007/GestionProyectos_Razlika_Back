@@ -3,12 +3,26 @@ import { ProjectModel } from './proyecto.js';
 const resolversProyecto = {
   Query: {
     Proyectos: async (parent, args, context) => {
-      const proyectos = await ProjectModel.find();
+      const proyectos = await ProjectModel.find().populate([
+        { path: 'lider' },
+        { path: 'avances' },
+        { path: 'inscripciones', populate: { path: 'estudiante' } },
+      ]);
       return proyectos;
+    },
+    // Proyectos: async (parent, args, context) => {
+    //   const proyectos = await ProjectModel.find();
+    //   return proyectos;
+    // },
+    Proyecto: async (parent, args) => {
+      const proyecto = await ProjectModel.findOne({ _id: args._id })
+        .populate('avances')
+        .populate('inscripciones');
+      return proyecto;
     },
   },
   Mutation: {
-    crearProyecto: async (parent, args, context) => {
+    crearProyecto: async (parent, args) => {
       const proyectoCreado = await ProjectModel.create({
         nombre: args.nombre,
         estado: args.estado,
@@ -24,7 +38,7 @@ const resolversProyecto = {
     editarProyecto: async (parent, args) => {
       const proyectoEditado = await ProjectModel.findByIdAndUpdate(
         args._id,
-        { ...args.campos },
+        { ...args.campo },
         { new: true }
       );
       return proyectoEditado;
@@ -47,7 +61,8 @@ const resolversProyecto = {
         args.idProyecto,
         {
           $set: {
-            [`objetivos.${args.indexObjetivo}.descripcion`]: args.campos.descripcion,
+            [`objetivos.${args.indexObjetivo}.descripcion`]:
+              args.campos.descripcion,
             [`objetivos.${args.indexObjetivo}.tipo`]: args.campos.tipo,
           },
         },

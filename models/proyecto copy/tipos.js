@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server-express';
-
+//
 const tiposProyecto = gql`
   type Objetivo {
     _id: ID!
@@ -27,6 +27,21 @@ const tiposProyecto = gql`
     lider: String
   }
 
+  input editProyecto {
+    nombre: String
+    presupuesto: Float
+    fechaInicio: Date
+    fechaFin: Date
+    estado: Enum_EstadoProyecto
+    fase: Enum_FaseProyecto
+    lider: String
+  }
+
+  input editObjetivo {
+    descripcion: String!
+    tipo: Enum_TipoObjetivo!
+  }
+
   type Proyecto {
     _id: ID!
     nombre: String!
@@ -43,8 +58,8 @@ const tiposProyecto = gql`
 
   type Query {
     Proyectos: [Proyecto]
+    Proyecto(_id: String!): Proyecto
   }
-
   type Mutation {
     crearProyecto(
       nombre: String!
@@ -61,7 +76,11 @@ const tiposProyecto = gql`
 
     crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Proyecto
 
-    editarObjetivo(idProyecto: String!, indexObjetivo: Int!, campos: camposObjetivo!): Proyecto
+    editarObjetivo(
+      idProyecto: String!
+      indexObjetivo: Int!
+      campos: camposObjetivo!
+    ): Proyecto
 
     eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Proyecto
   }
