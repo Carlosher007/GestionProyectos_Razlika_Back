@@ -4,24 +4,60 @@ import bcrypt from 'bcrypt';
 const resolversUsuario = {
   Query: {
     Usuarios: async (parent, args, context) => {
-      const usuarios = await UserModel.find().populate([
-        {
+      const usuarios = await UserModel.find()
+        .populate({
           path: 'inscripciones',
           populate: {
             path: 'proyecto',
             populate: [{ path: 'lider' }, { path: 'avances' }],
           },
-        },
-        {
-          path: 'proyectosLiderados',
-        },
-      ]);
+        })
+        .populate({
+          path: 'avancesCreados',
+          populate: {
+            path: 'proyecto',
+            populate: [{ path: 'lider' }, { path: 'avances' }],
+          },
+        });
       return usuarios;
     },
+    // Usuarios: async (parent, args, context) => {
+    //   const usuarios = await UserModel.find().populate([
+    //     {
+    //       path: 'inscripciones',
+    //       populate: {
+    //         path: 'proyecto',
+    //         populate: [{ path: 'lider' }, { path: 'avances' }],
+    //       },
+    //     },
+    //     {
+    //       path: 'proyectosLiderados',
+    //     },
+    //   ]);
+    //   return usuarios;
+    // },
     Usuario: async (parent, args) => {
-      const usuario = await UserModel.findOne({ _id: args._id });
+      const usuario = await UserModel.findOne({ _id: args._id })
+        .populate({
+          path: 'inscripciones',
+          populate: {
+            path: 'proyecto',
+            populate: [{ path: 'lider' }, { path: 'avances' }],
+          },
+        })
+        .populate({
+          path: 'avancesCreados',
+          populate: {
+            path: 'proyecto',
+            populate: [{ path: 'lider' }, { path: 'avances' }],
+          },
+        });
       return usuario;
     },
+    // Usuario: async (parent, args) => {
+    //   const usuario = await UserModel.findOne({ _id: args._id });
+    //   return usuario;
+    // },
   },
   Mutation: {
     crearUsuario: async (parent, args) => {
@@ -59,10 +95,14 @@ const resolversUsuario = {
     },
     eliminarUsuario: async (parent, args) => {
       if (Object.keys(args).includes('_id')) {
-        const usuarioEliminado = await UserModel.findOneAndDelete({ _id: args._id });
+        const usuarioEliminado = await UserModel.findOneAndDelete({
+          _id: args._id,
+        });
         return usuarioEliminado;
       } else if (Object.keys(args).includes('correo')) {
-        const usuarioEliminado = await UserModel.findOneAndDelete({ correo: args.correo });
+        const usuarioEliminado = await UserModel.findOneAndDelete({
+          correo: args.correo,
+        });
         return usuarioEliminado;
       }
     },
