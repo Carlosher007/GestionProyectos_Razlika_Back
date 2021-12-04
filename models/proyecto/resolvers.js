@@ -1,6 +1,16 @@
+import { InscriptionModel } from '../inscripcion/inscripcion.js';
+import { UserModel } from '../usuario/usuario.js';
 import { ProjectModel } from './proyecto.js';
 
 const resolversProyecto = {
+  Proyecto: {
+    lider: async (parent, args, context) => {
+      const usr = await UserModel.findOne({
+        _id: parent.lider.toString(),
+      });
+      return usr;
+    },
+  },
   Query: {
     Proyectos: async (parent, args, context) => {
       const proyectos = await ProjectModel.find();
@@ -11,8 +21,6 @@ const resolversProyecto = {
     crearProyecto: async (parent, args, context) => {
       const proyectoCreado = await ProjectModel.create({
         nombre: args.nombre,
-        estado: args.estado,
-        fase: args.fase,
         fechaInicio: args.fechaInicio,
         fechaFin: args.fechaFin,
         presupuesto: args.presupuesto,
@@ -27,6 +35,7 @@ const resolversProyecto = {
         { ...args.campos },
         { new: true }
       );
+
       return proyectoEditado;
     },
     crearObjetivo: async (parent, args) => {
