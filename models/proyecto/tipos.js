@@ -32,6 +32,14 @@ const tiposProyecto = gql`
     lider: String
   }
 
+  input camposEstadoProyecto {
+    estado: Enum_EstadoProyecto
+  }
+
+  input camposFaseProyecto {
+    fase: Enum_FaseProyecto
+  }
+
   type Proyecto {
     _id: ID!
     nombre: String!
@@ -48,6 +56,8 @@ const tiposProyecto = gql`
 
   type Query {
     ProyectosBasico: [Proyecto]
+    MisProyectos(_id:String): [Proyecto]
+    MisProyetosActivos(_id:String):[Proyecto]
     Proyecto(_id: String!): Proyecto
     ProyectosConTodo: [Proyecto]
     ProyectoConTodo(_id: String!): Proyecto
@@ -66,6 +76,10 @@ const tiposProyecto = gql`
     ): Proyecto
 
     editarProyecto(_id: String!, campos: camposProyecto!): Proyecto
+
+    editarEstadoProyecto(_id: String!, campos: camposEstadoProyecto!): Proyecto
+
+    editarFaseProyecto(_id: String!, campos: camposFaseProyecto!): Proyecto
 
     eliminarProyecto(_id: String, nombre: String): Proyecto
 

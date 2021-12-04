@@ -14,6 +14,14 @@ const resolversProyecto = {
       const proyectos = await ProjectModel.find();
       return proyectos;
     },
+    MisProyetos: async (parent, args, context) => {
+      const proyectos = await ProjectModel.find({ _id: args._id , estado="ACTIVO"});
+      return proyectos;
+    },
+    MisProyetosActivos: async (parent, args, context) => {
+      const proyectos = await ProjectModel.findOne({ _id: args._id , estado:"ACTIVO" });
+      return proyectos;
+    },
     Proyecto: async (parent, args) => {
       const proyecto = await ProjectModel.findOne({ _id: args._id })
         .populate('avances')
@@ -52,6 +60,22 @@ const resolversProyecto = {
       return proyectoCreado;
     },
     editarProyecto: async (parent, args) => {
+      const proyectoEditado = await ProjectModel.findByIdAndUpdate(
+        args._id,
+        { ...args.campos },
+        { new: true }
+      );
+      return proyectoEditado;
+    },
+    editarEstadoProyecto: async (parent, args) => {
+      const proyectoEditado = await ProjectModel.findByIdAndUpdate(
+        args._id,
+        { ...args.campos },
+        { new: true }
+      );
+      return proyectoEditado;
+    },
+    editarFaseProyecto: async (parent, args) => {
       const proyectoEditado = await ProjectModel.findByIdAndUpdate(
         args._id,
         { ...args.campos },
