@@ -29,11 +29,12 @@ const resolversProyecto = {
       return proyectos;
     },
     ProyectoConTodo: async (parent, args, context) => {
-      const proyectos = await ProjectModel.findOne({ _id: args._id }).populate([
+      const proyecto = await ProjectModel.findOne({ _id: args._id }).populate([
         { path: 'lider' },
         { path: 'avances' },
         { path: 'inscripciones', populate: { path: 'estudiante' } },
       ]);
+      return proyecto;
     },
   },
   Mutation: {
@@ -57,6 +58,19 @@ const resolversProyecto = {
         { new: true }
       );
       return proyectoEditado;
+    },
+    eliminarProyecto: async (parent, args) => {
+      if (Object.keys(args).includes('_id')) {
+        const proyectoEliminado = await ProjectModel.findOneAndDelete({
+          _id: args._id,
+        });
+        return proyectoEliminado;
+      } else if (Object.keys(args).includes('nombre')) {
+        const proyectoEliminado = await ProjectModel.findOneAndDelete({
+          nombre: args.nombre,
+        });
+        return proyectoEliminado;
+      }
     },
     crearObjetivo: async (parent, args) => {
       const proyectoConObjetivo = await ProjectModel.findByIdAndUpdate(
