@@ -2,89 +2,81 @@ import { ProjectModel } from './proyecto.js';
 
 const resolversProyecto = {
   Query: {
-    Proyectos: async (parent, args, context) => {
-      const proyectos = await ProjectModel.find().populate([
-        { path: 'lider' },
-        { path: 'avances' },
-        { path: 'inscripciones', populate: { path: 'estudiante' } },
-      ]);
-      return proyectos;
+    Proyectos: async (parent, args) => {
+      const proyectos = await ProjectModel.find().populate('lider')
+      return proyectos
     },
-    // Proyectos: async (parent, args, context) => {
-    //   const proyectos = await ProjectModel.find();
-    //   return proyectos;
-    // },
     Proyecto: async (parent, args) => {
-      const proyecto = await ProjectModel.findOne({ _id: args._id })
-        .populate('avances')
-        .populate('inscripciones');
-      return proyecto;
+      const Proyecto = await ProjectModel.findOne({ _id: args._id })
+      return Proyecto
     },
   },
+
   Mutation: {
     crearProyecto: async (parent, args) => {
       const proyectoCreado = await ProjectModel.create({
         nombre: args.nombre,
-        estado: args.estado,
-        fase: args.fase,
+        objGeneral: args.objGeneral,
+        objEspecificos: args.objEspecificos,
+        presupuesto: args.presupuesto,
         fechaInicio: args.fechaInicio,
         fechaFin: args.fechaFin,
-        presupuesto: args.presupuesto,
         lider: args.lider,
-        objetivos: args.objetivos,
-      });
-      return proyectoCreado;
+      })
+      return proyectoCreado
     },
     editarProyecto: async (parent, args) => {
       const proyectoEditado = await ProjectModel.findByIdAndUpdate(
         args._id,
-        { ...args.campo },
-        { new: true }
-      );
-      return proyectoEditado;
-    },
-    crearObjetivo: async (parent, args) => {
-      const proyectoConObjetivo = await ProjectModel.findByIdAndUpdate(
-        args.idProyecto,
         {
-          $addToSet: {
-            objetivos: { ...args.campos },
-          },
+          nombre: args.nombre,
+          objGeneral: args.objGeneral,
+          objEspecificos: args.objEspecificos,
+          presupuesto: args.presupuesto,
+          fechaInicio: args.fechaInicio,
+          fechaFin: args.fechaFin,
         },
         { new: true }
-      );
-
-      return proyectoConObjetivo;
+      )
+      return proyectoEditado
     },
-    editarObjetivo: async (parent, args) => {
-      const proyectoEditado = await ProjectModel.findByIdAndUpdate(
-        args.idProyecto,
+    aprobarProyecto: async (parent, args) => {
+      const proyectoAprobado = await ProjectModel.findByIdAndUpdate(
+        args._id,
         {
-          $set: {
-            [`objetivos.${args.indexObjetivo}.descripcion`]:
-              args.campos.descripcion,
-            [`objetivos.${args.indexObjetivo}.tipo`]: args.campos.tipo,
-          },
+          estado: 'ACTIVO',
         },
         { new: true }
-      );
-      return proyectoEditado;
+      )
+      return proyectoAprobado
     },
-    eliminarObjetivo: async (parent, args) => {
-      const proyectoObjetivo = await ProjectModel.findByIdAndUpdate(
-        { _id: args.idProyecto },
+    cambiarEstadoProyecto: async (parent, args) => {
+      const estadoProyecto = await ProjectModel.findByIdAndUpdate(
+        args._id,
         {
-          $pull: {
-            objetivos: {
-              _id: args.idObjetivo,
-            },
-          },
+          estado: args.estado,
         },
         { new: true }
-      );
-      return proyectoObjetivo;
+      )
+      return estadoProyecto
+    },
+    cambiarFaseProyecto: async (parent, args) => {
+      const estadoProyecto = await ProjectModel.findByIdAndUpdate(
+        args._id,
+        {
+          fase: args.fase,
+        },
+        { new: true }
+      )
+      return estadoProyecto
+    },
+    eliminarProyecto: async (parent, args) => {
+      const proyectoEliminado = await ProjectModel.findOneAndDelete({
+        _id: args._id,
+      })
+      return proyectoEliminado
     },
   },
-};
+}
 
-export { resolversProyecto };
+export { resolversProyecto }
