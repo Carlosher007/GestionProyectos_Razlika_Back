@@ -42,7 +42,10 @@ const tiposProyecto = gql`
   }
 
   type Query {
-    Proyectos: [Proyecto]
+    ProyectosBasico: [Proyecto]
+    Proyecto(_id: String!): Proyecto
+    ProyectosConTodo: [Proyecto]
+    ProyectoConTodo(_id:String!): Proyecto
   }
 
   type Mutation {
@@ -59,7 +62,11 @@ const tiposProyecto = gql`
 
     crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Proyecto
 
-    editarObjetivo(idProyecto: String!, indexObjetivo: Int!, campos: camposObjetivo!): Proyecto
+    editarObjetivo(
+      idProyecto: String!
+      indexObjetivo: Int!
+      campos: camposObjetivo!
+    ): Proyecto
 
     eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Proyecto
   }

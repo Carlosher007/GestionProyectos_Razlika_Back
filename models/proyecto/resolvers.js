@@ -3,17 +3,39 @@ import { UserModel } from '../usuario/usuario.js';
 import { ProjectModel } from './proyecto.js';
 
 const resolversProyecto = {
-  Proyecto: {
-    lider: async (parent, args, context) => {
-      const usr = await UserModel.findOne({
-        _id: parent.lider.toString(),
-      });
-      return usr;
-    },
-  },
+  // Proyecto: {
+  //   lider: async (parent, args, context) => {
+  //     const usr = await UserModel.findOne({
+  //       _id: parent.lider.toString(),
+  //     });
+  //     return usr;
+  //   },
+  // },
   Query: {
-    Proyectos: async (parent, args, context) => {
+    ProyectosBasico: async (parent, args, context) => {
       const proyectos = await ProjectModel.find();
+      return proyectos;
+    },
+    Proyecto: async (parent, args) => {
+      const proyecto = await ProjectModel.findOne({ _id: args._id })
+        .populate('avances')
+        .populate('inscripciones');
+      return proyecto;
+    },
+    ProyectosConTodo: async (parent, args, context) => {
+      const proyectos = await ProjectModel.find().populate([
+        { path: 'lider' },
+        { path: 'avances' },
+        { path: 'inscripciones', populate: { path: 'estudiante' } },
+      ]);
+      return proyectos;
+    },
+    ProyectoConTodo: async (parent, args, context) => {
+      const proyectos = await ProjectModel.findOne({_id:args._id}).populate([
+        { path: 'lider' },
+        { path: 'avances' },
+        { path: 'inscripciones', populate: { path: 'estudiante' } },
+      ]);
       return proyectos;
     },
   },
@@ -56,7 +78,8 @@ const resolversProyecto = {
         args.idProyecto,
         {
           $set: {
-            [`objetivos.${args.indexObjetivo}.descripcion`]: args.campos.descripcion,
+            [`objetivos.${args.indexObjetivo}.descripcion`]:
+              args.campos.descripcion,
             [`objetivos.${args.indexObjetivo}.tipo`]: args.campos.tipo,
           },
         },
