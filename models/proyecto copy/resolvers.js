@@ -2,17 +2,7 @@ import { ProjectModel } from './proyecto.js';
 
 const resolversProyecto = {
   Query: {
-    ProyectosBasico: async (parent, args, context) => {
-      const proyectos = await ProjectModel.find();
-      return proyectos;
-    },
-    Proyecto: async (parent, args) => {
-      const proyecto = await ProjectModel.findOne({ _id: args._id })
-        .populate('avances')
-        .populate('inscripciones');
-      return proyecto;
-    },
-    ProyectosConTodo: async (parent, args, context) => {
+    Proyectos: async (parent, args, context) => {
       const proyectos = await ProjectModel.find().populate([
         { path: 'lider' },
         { path: 'avances' },
@@ -20,13 +10,15 @@ const resolversProyecto = {
       ]);
       return proyectos;
     },
-    ProyectoConTodo: async (parent, args, context) => {
-      const proyectos = await ProjectModel.findOne().populate([
-        { path: 'lider' },
-        { path: 'avances' },
-        { path: 'inscripciones', populate: { path: 'estudiante' } },
-      ]);
-      return proyectos;
+    // Proyectos: async (parent, args, context) => {
+    //   const proyectos = await ProjectModel.find();
+    //   return proyectos;
+    // },
+    Proyecto: async (parent, args) => {
+      const proyecto = await ProjectModel.findOne({ _id: args._id })
+        .populate('avances')
+        .populate('inscripciones');
+      return proyecto;
     },
   },
   Mutation: {

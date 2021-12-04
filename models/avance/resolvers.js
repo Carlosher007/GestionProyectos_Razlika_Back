@@ -22,7 +22,7 @@ const resolversAvance = {
         descripcion: args.descripcion,
         proyecto: args.proyecto,
         creadoPor: args.creadoPor,
-        observaciones : args.observaciones,
+        observaciones: args.observaciones,
       });
       return avanceCreado;
     },

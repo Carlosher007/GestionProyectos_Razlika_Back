@@ -1,5 +1,3 @@
-import { InscriptionModel } from '../inscripcion/inscripcion.js';
-import { UserModel } from '../usuario/usuario.js';
 import { ProjectModel } from './proyecto.js';
 
 const resolversProyecto = {
@@ -31,18 +29,19 @@ const resolversProyecto = {
       return proyectos;
     },
     ProyectoConTodo: async (parent, args, context) => {
-      const proyectos = await ProjectModel.findOne({_id:args._id}).populate([
+      const proyectos = await ProjectModel.findOne({ _id: args._id }).populate([
         { path: 'lider' },
         { path: 'avances' },
         { path: 'inscripciones', populate: { path: 'estudiante' } },
       ]);
-      return proyectos;
     },
   },
   Mutation: {
     crearProyecto: async (parent, args, context) => {
       const proyectoCreado = await ProjectModel.create({
         nombre: args.nombre,
+        estado: args.estado,
+        fase: args.fase,
         fechaInicio: args.fechaInicio,
         fechaFin: args.fechaFin,
         presupuesto: args.presupuesto,
@@ -57,7 +56,6 @@ const resolversProyecto = {
         { ...args.campos },
         { new: true }
       );
-
       return proyectoEditado;
     },
     crearObjetivo: async (parent, args) => {
