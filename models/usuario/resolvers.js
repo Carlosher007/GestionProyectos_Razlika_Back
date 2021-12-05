@@ -20,6 +20,7 @@ const resolversUsuario = {
       const usuario = await UserModel.findOne({ _id: args._id });
       return usuario;
     },
+    // No esta funcionando
     ProyectosUsuario: async (parent, args, context) => {
       const usuarios = await UserModel.findOne({_id:args._id, }).populate([
         {

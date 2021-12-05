@@ -56,8 +56,6 @@ const tiposProyecto = gql`
 
   type Query {
     ProyectosBasico: [Proyecto]
-    MisProyectos(_id:String): [Proyecto]
-    MisProyetosActivos(_id:String):[Proyecto]
     Proyecto(_id: String!): Proyecto
     ProyectosConTodo: [Proyecto]
     ProyectoConTodo(_id: String!): Proyecto

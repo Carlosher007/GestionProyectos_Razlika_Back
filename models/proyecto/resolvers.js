@@ -14,14 +14,6 @@ const resolversProyecto = {
       const proyectos = await ProjectModel.find();
       return proyectos;
     },
-    MisProyetos: async (parent, args, context) => {
-      const proyectos = await ProjectModel.find({ _id: args._id , estado="ACTIVO"});
-      return proyectos;
-    },
-    MisProyetosActivos: async (parent, args, context) => {
-      const proyectos = await ProjectModel.findOne({ _id: args._id , estado:"ACTIVO" });
-      return proyectos;
-    },
     Proyecto: async (parent, args) => {
       const proyecto = await ProjectModel.findOne({ _id: args._id })
         .populate('avances')
