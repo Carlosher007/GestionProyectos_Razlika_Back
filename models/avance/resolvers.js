@@ -1,5 +1,5 @@
 import { ModeloAvance } from './avance.js';
-
+import { ProjectModel } from '../proyecto/proyecto.js';
 const resolversAvance = {
   Query: {
     Avances: async (parent, args) => {
