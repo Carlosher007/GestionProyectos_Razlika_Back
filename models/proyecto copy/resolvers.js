@@ -1,26 +1,8 @@
 import { ProjectModel } from './proyecto.js';
 
 const resolversProyecto = {
-  // Proyecto: {
-  //   lider: async (parent, args, context) => {
-  //     const usr = await UserModel.findOne({
-  //       _id: parent.lider.toString(),
-  //     });
-  //     return usr;
-  //   },
-  // },
   Query: {
-    ProyectosBasico: async (parent, args, context) => {
-      const proyectos = await ProjectModel.find();
-      return proyectos;
-    },
-    Proyecto: async (parent, args) => {
-      const proyecto = await ProjectModel.findOne({ _id: args._id })
-        .populate('avances')
-        .populate('inscripciones');
-      return proyecto;
-    },
-    ProyectosConTodo: async (parent, args, context) => {
+    Proyectos: async (parent, args, context) => {
       const proyectos = await ProjectModel.find().populate([
         { path: 'lider' },
         { path: 'avances' },
@@ -28,17 +10,19 @@ const resolversProyecto = {
       ]);
       return proyectos;
     },
-    ProyectoConTodo: async (parent, args, context) => {
-      const proyecto = await ProjectModel.findOne({ _id: args._id }).populate([
-        { path: 'lider' },
-        { path: 'avances' },
-        { path: 'inscripciones', populate: { path: 'estudiante' } },
-      ]);
+    // Proyectos: async (parent, args, context) => {
+    //   const proyectos = await ProjectModel.find();
+    //   return proyectos;
+    // },
+    Proyecto: async (parent, args) => {
+      const proyecto = await ProjectModel.findOne({ _id: args._id })
+        .populate('avances')
+        .populate('inscripciones');
       return proyecto;
     },
   },
   Mutation: {
-    crearProyecto: async (parent, args, context) => {
+    crearProyecto: async (parent, args) => {
       const proyectoCreado = await ProjectModel.create({
         nombre: args.nombre,
         estado: args.estado,
@@ -54,39 +38,10 @@ const resolversProyecto = {
     editarProyecto: async (parent, args) => {
       const proyectoEditado = await ProjectModel.findByIdAndUpdate(
         args._id,
-        { ...args.campos },
+        { ...args.campo },
         { new: true }
       );
       return proyectoEditado;
-    },
-    editarEstadoProyecto: async (parent, args) => {
-      const proyectoEditado = await ProjectModel.findByIdAndUpdate(
-        args._id,
-        { ...args.campos },
-        { new: true }
-      );
-      return proyectoEditado;
-    },
-    editarFaseProyecto: async (parent, args) => {
-      const proyectoEditado = await ProjectModel.findByIdAndUpdate(
-        args._id,
-        { ...args.campos },
-        { new: true }
-      );
-      return proyectoEditado;
-    },
-    eliminarProyecto: async (parent, args) => {
-      if (Object.keys(args).includes('_id')) {
-        const proyectoEliminado = await ProjectModel.findOneAndDelete({
-          _id: args._id,
-        });
-        return proyectoEliminado;
-      } else if (Object.keys(args).includes('nombre')) {
-        const proyectoEliminado = await ProjectModel.findOneAndDelete({
-          nombre: args.nombre,
-        });
-        return proyectoEliminado;
-      }
     },
     crearObjetivo: async (parent, args) => {
       const proyectoConObjetivo = await ProjectModel.findByIdAndUpdate(

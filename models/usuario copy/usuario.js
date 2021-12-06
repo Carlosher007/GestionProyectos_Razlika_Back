@@ -2,14 +2,6 @@ import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 // import { Enum_Rol, Enum_EstadoUsuario } from '../enums/enums';
 
-// interface User {
-//   correo: string;
-//   identificacion: string;
-//   nombre: string;
-//   apellido: string;
-//   rol: Enum_Rol;
-//   estado: Enum_EstadoUsuario;
-// }
 
 const userSchema = new Schema({
   correo: {
@@ -64,6 +56,7 @@ userSchema.virtual('proyectosLiderados', {
   localField: '_id',
   foreignField: 'lider',
 });
+
 
 userSchema.virtual('avancesCreados', {
   ref: 'Avance',
