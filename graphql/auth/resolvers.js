@@ -27,6 +27,7 @@ const resolversAutenticacion = {
         }),
       };
     },
+
     login: async (parent, args) => {
       const usuarioEcontrado = await UserModel.findOne({ correo: args.correo });
       if (await bcrypt.compare(args.password, usuarioEcontrado.password)) {
@@ -45,8 +46,6 @@ const resolversAutenticacion = {
 
     refreshToken: async (parent, args, context) => {
       console.log('contexto', context);
-      // valdiar que el contexto tenga info del usuario. si si, refrescar el token
-      // si no devolver null para que en el front redirija al login.
       if (!context.userData) {
         return {
           error: 'token no valido',
@@ -63,6 +62,8 @@ const resolversAutenticacion = {
           }),
         };
       }
+      // valdiar que el contexto tenga info del usuario. si si, refrescar el token
+      // si no devolver null para que en el front redirija al login.
     },
   },
 };
