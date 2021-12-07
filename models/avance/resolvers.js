@@ -1,5 +1,6 @@
 import { ModeloAvance } from './avance.js';
 import { ProjectModel } from '../proyecto/proyecto.js';
+import { UserModel } from '../usuario/usuario.js';
 
 const formatErrors = (error, otherErrors) => {
   const errors = error.errors;
@@ -30,6 +31,12 @@ const formatErrors = (error, otherErrors) => {
 };
 
 const resolversAvance = {
+  // proyecto: async (parent, args, context) => {
+  //   return await ProjectModel.findOne({ _id: parent.proyecto });
+  // },
+  // creadoPor: async (parent, args, context) => {
+  //   return await UserModel.findOne({ _id: parent.estudiante });
+  // },
   Query: {
     Avances: async (parent, args) => {
       const otherErrors = [];
@@ -83,21 +90,32 @@ const resolversAvance = {
     crearAvance: async (parents, args) => {
       const otherErrors = [];
       try {
-        const avanceCreado = ModeloAvance.create({
-          fecha: args.fecha,
-          descripcion: args.descripcion,
-          proyecto: args.proyecto,
-          creadoPor: args.creadoPor,
-          observaciones: args.observaciones,
-        });
-        if (otherErrors.length) {
-          throw otherErrors;
+        const usuario = await UserModel.findOne({ _id: args._id });
+        if (usuario.rol === 'ESTUDIANTE') {
+          const avanceCreado = ModeloAvance.create({
+            fecha: Date.now(),
+            descripcion: args.descripcion,
+            proyecto: args.proyecto,
+            creadoPor: usuario._id,
+          });
+          if (otherErrors.length) {
+            throw otherErrors;
+          }
+          return {
+            succes: true,
+            errors: [],
+            avance: avanceCreado,
+          };
+        } else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            avance: null,
+          };
         }
-        return {
-          succes: true,
-          errors: [],
-          avance: avanceCreado,
-        };
       } catch (error) {
         return {
           succes: false,
@@ -110,9 +128,14 @@ const resolversAvance = {
     editarAvance: async (parent, args) => {
       const otherErrors = [];
       try {
+        const usuario = await UserModel.findOne({ _id: args._id });
+        if (usuario.rol === 'ESTUDIANTE') {
         const avanceEditado = await ModeloAvance.findByIdAndUpdate(
-          args._id,
-          { ...args.campos },
+          args._idAvance,
+          {
+            fecha:Date.now(),
+            descripcion:args.descripcion
+          },
           { new: true }
         );
         if (otherErrors.length) {
@@ -123,6 +146,16 @@ const resolversAvance = {
           errors: [],
           avance: avanceEditado,
         };
+      }else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            avance: null,
+          };
+        }
       } catch (error) {
         return {
           succes: false,
@@ -144,7 +177,6 @@ const resolversAvance = {
           },
           { new: true }
         );
-
         if (otherErrors.length) {
           throw otherErrors;
         }
@@ -195,25 +227,25 @@ const resolversAvance = {
     eliminarObservacion: async (parent, args) => {
       const otherErrors = [];
       try {
-      const observacionEliminada = await ProjectModel.findByIdAndUpdate(
-        { _id: args.idAvance },
-        {
-          $pull: {
-            objetivos: {
-              _id: args.idObservacion,
+        const observacionEliminada = await ProjectModel.findByIdAndUpdate(
+          { _id: args.idAvance },
+          {
+            $pull: {
+              objetivos: {
+                _id: args.idObservacion,
+              },
             },
           },
-        },
-        { new: true }
-      );
-      if (otherErrors.length) {
-        throw otherErrors;
-      }
-      return {
-        succes: true,
-        errors: [],
-        avance: observacionEliminada,
-      };
+          { new: true }
+        );
+        if (otherErrors.length) {
+          throw otherErrors;
+        }
+        return {
+          succes: true,
+          errors: [],
+          avance: observacionEliminada,
+        };
       } catch (error) {
         return {
           succes: false,

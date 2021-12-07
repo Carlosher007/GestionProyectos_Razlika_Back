@@ -11,7 +11,8 @@ const tiposInscripcion = gql`
   }
 
   type Query {
-    Inscripciones: ResponseList
+    Inscripciones: ResponseList!
+    InscripcionesEstudiantes(_id:String!): ResponseList!
   }
 
   type Error {
@@ -33,11 +34,9 @@ const tiposInscripcion = gql`
 
   type Mutation {
     crearInscripcion(
-      fechaIngreso: Date!
-      fechaEgreso: Date!
+      _id:String!
       estado: Enum_EstadoInscripcion!
       proyecto: String!
-      estudiante: String!
     ): Response
 
     aprobarInscripcion(id: String!): Response

@@ -32,6 +32,21 @@ const tiposProyecto = gql`
     lider: String
   }
 
+  input editarProyecto {
+    nombre: String
+    presupuesto: Float
+    fechaInicio: Date
+    fechaFin: Date
+    estado: Enum_EstadoProyecto
+    fase: Enum_FaseProyecto
+    lider: String
+  }
+
+  input editarProyectoActivo {
+    nombre: String
+    presupuesto: Float
+  }
+
   input camposEstadoProyecto {
     estado: Enum_EstadoProyecto
   }
@@ -55,10 +70,15 @@ const tiposProyecto = gql`
   }
 
   type Query {
-    ProyectosBasico: ResponseList
-    Proyecto(_id: String!): Response
-    ProyectosConTodo: ResponseList
-    ProyectoConTodo(_id: String!): Response
+    ProyectosBasico: ResponseList!
+    Proyecto(_id: String!): Response!
+    ProyectosConTodo: ResponseList!
+    ProyectoConTodo(_id: String!): Response!
+    ProyectosBasicoAdmin(_id: String!): ResponseList!
+    VerProyectosLidero(_id: String): ResponseList!
+    VerProyectosLideroActivo(_id: String): ResponseList!
+    VerProyectosEstudiante(_id: String): ResponseList!
+    ProyectoConAvanceEstudiante(_id: String, _idProyecto: String!): Response
   }
 
   type Error {
@@ -90,19 +110,41 @@ const tiposProyecto = gql`
       objetivos: [crearObjetivo]
     ): Response
 
-    editarProyecto(_id: String!, campos: camposProyecto!): Response
+    crearProyectoLider(
+      _id: String!
+      nombre: String!
+      presupuesto: Float!
+      fechaFin: Date!
+      estado: Enum_EstadoProyecto!
+      fase: Enum_FaseProyecto!
+      objetivos: [crearObjetivo]
+    ): Response
 
-    eliminarProyecto(_id: String, nombre: String): Response
+    editarProyecto(_id: String!, campos: camposProyecto!): Response!
 
-    crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Response
+    editarProyectoAdministrador(
+      _idProyecto: String!
+      _id: String
+      campos: editarProyecto
+    ): Response!
+
+    editarProyectoActivoLider(
+      _idProyecto: String!
+      _id: String
+      campos: editarProyectoActivo
+    ): Response!
+
+    eliminarProyecto(_id: String, nombre: String): Response!
+
+    crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Response!
 
     editarObjetivo(
       idProyecto: String!
       indexObjetivo: Int!
       campos: camposEditarObjetivo!
-    ): Response
+    ): Response!
 
-    eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Response
+    eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Response!
   }
 `;
 

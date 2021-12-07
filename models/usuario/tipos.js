@@ -43,8 +43,9 @@ const tiposUsuario = gql`
     Usuario(_id: String!): Response!
     UsuariosConTodo: ResponseList!
     UsuarioConTodo(_id: String!): Response!
-    UsuariosBasicoAdmin: ResponseList!
+    UsuariosBasicoAdmin(_id: String!): ResponseList!
     Estudiantes: ResponseList!
+    EstudiantesLider(_id: String!): ResponseList!
   }
 
   type Error {
@@ -76,6 +77,18 @@ const tiposUsuario = gql`
     ): Response!
 
     editarUsuario(_id: String!, campos: editarUsuario): Response!
+
+    editarUsuarioAdministrador(
+      _idUsuario: String!
+      _id: String
+      campos: editarUsuario
+    ): Response!
+
+    editarUsuarioLider(
+      _idUsuario: String!
+      _id: String
+      campos: editarUsuario
+    ): Response!
 
     eliminarUsuario(_id: String, correo: String): Response!
   }

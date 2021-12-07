@@ -71,13 +71,69 @@ const resolversUsuario = {
         };
       }
     },
+    EstudiantesLider: async (parent, args, context) => {
+      const otherErrors = [];
+      try {
+        const usuario = await UserModel.findOne({ _id: args._id });
+        if (usuario.rol === 'LIDER') {
+          const Usuarios = await UserModel.find({ rol: 'ESTUDIANTE' });
+          if (otherErrors.length) {
+            throw otherErrors;
+          }
+          return {
+            succes: true,
+            errors: [],
+            usuario: Usuarios,
+          };
+        } else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            usuario: null,
+          };
+        }
+      } catch (error) {
+        return {
+          succes: false,
+          errors: formatErrors(error, otherErrors),
+          usuario: null,
+        };
+      }
+    },
     // ESTE ES UN EJEMPLO, PERO REALMENTE LAS VALIDACIONES DE ROL SE HARAN EN EL FRONT
     UsuariosBasicoAdmin: async (parent, args, context) => {
-      if (context.userData.rol === 'ADMINISTRADOR') {
-        const Usuarios = await UserModel.find();
-        return Usuarios;
-      } else {
-        return false;
+      const otherErrors = [];
+      try {
+        const usuario = await UserModel.findOne({ _id: args._id });
+        // if (otherErrors.length) {
+        //   throw otherErrors;
+        // }
+        if (usuario.rol === 'ADMINISTRADOR') {
+          const Usuarios = await UserModel.find();
+          return {
+            succes: false,
+            errors: [],
+            usuario: Usuarios,
+          };
+        } else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            usuario: null,
+          };
+        }
+      } catch (error) {
+        return {
+          succes: true,
+          errors: [],
+          usuario: null,
+        };
       }
     },
     Usuario: async (parent, args) => {
@@ -224,6 +280,82 @@ const resolversUsuario = {
           errors: [],
           usuario: usuarioEditado,
         };
+      } catch (error) {
+        return {
+          succes: false,
+          errors: formatErrors(error, otherErrors),
+          usuario: null,
+        };
+      }
+    },
+
+    editarUsuarioAdministrador: async (parent, args) => {
+      const otherErrors = [];
+      try {
+        const usuario = await UserModel.findOne({ _id: args._id });
+        if (usuario.rol === 'ADMINISTRADOR') {
+          const usuarioEditado = await UserModel.findByIdAndUpdate(
+            args._idUsuario,
+            { ...args.campos },
+            { new: true }
+          );
+
+          if (otherErrors.length) {
+            throw otherErrors;
+          }
+          return {
+            succes: true,
+            errors: [],
+            usuario: usuarioEditado,
+          };
+        } else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            usuario: null,
+          };
+        }
+      } catch (error) {
+        return {
+          succes: false,
+          errors: formatErrors(error, otherErrors),
+          usuario: null,
+        };
+      }
+    },
+
+    editarUsuarioLider: async (parent, args) => {
+      const otherErrors = [];
+      try {
+        const usuario = await UserModel.findOne({ _id: args._id });
+        if (usuario.rol === 'LIDER') {
+          const usuarioEditado = await UserModel.findByIdAndUpdate(
+            args._idUsuario,
+            { ...args.campos },
+            { new: true }
+          );
+
+          if (otherErrors.length) {
+            throw otherErrors;
+          }
+          return {
+            succes: true,
+            errors: [],
+            usuario: usuarioEditado,
+          };
+        } else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            usuario: null,
+          };
+        }
       } catch (error) {
         return {
           succes: false,
