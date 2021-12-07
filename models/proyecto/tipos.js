@@ -55,10 +55,27 @@ const tiposProyecto = gql`
   }
 
   type Query {
-    ProyectosBasico: [Proyecto]
-    Proyecto(_id: String!): Proyecto
-    ProyectosConTodo: [Proyecto]
-    ProyectoConTodo(_id: String!): Proyecto
+    ProyectosBasico: ResponseList
+    Proyecto(_id: String!): Response
+    ProyectosConTodo: ResponseList
+    ProyectoConTodo(_id: String!): Response
+  }
+
+  type Error {
+    path: String!
+    message: String!
+  }
+
+  type Response {
+    succes: Boolean!
+    errors: [Error]
+    proyecto: Proyecto
+  }
+
+  type ResponseList {
+    succes: Boolean!
+    errors: [Error]
+    proyecto: [Proyecto]
   }
 
   type Mutation {
@@ -71,25 +88,21 @@ const tiposProyecto = gql`
       fase: Enum_FaseProyecto!
       lider: String!
       objetivos: [crearObjetivo]
-    ): Proyecto
+    ): Response
 
-    editarProyecto(_id: String!, campos: camposProyecto!): Proyecto
+    editarProyecto(_id: String!, campos: camposProyecto!): Response
 
-    editarEstadoProyecto(_id: String!, campos: camposEstadoProyecto!): Proyecto
+    eliminarProyecto(_id: String, nombre: String): Response
 
-    editarFaseProyecto(_id: String!, campos: camposFaseProyecto!): Proyecto
-
-    eliminarProyecto(_id: String, nombre: String): Proyecto
-
-    crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Proyecto
+    crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Response
 
     editarObjetivo(
       idProyecto: String!
       indexObjetivo: Int!
       campos: camposEditarObjetivo!
-    ): Proyecto
+    ): Response
 
-    eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Proyecto
+    eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Response
   }
 `;
 

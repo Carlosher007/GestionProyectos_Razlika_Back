@@ -1,6 +1,7 @@
 import { UserModel } from '../../models/usuario/usuario.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../../utils/tokenUtils.js';
+import validate from 'mongoose-validator';
 
 const resolversAutenticacion = {
   Mutation: {
@@ -29,6 +30,7 @@ const resolversAutenticacion = {
     },
 
     login: async (parent, args) => {
+      try{
       const usuarioEcontrado = await UserModel.findOne({ correo: args.correo });
       if (await bcrypt.compare(args.password, usuarioEcontrado.password)) {
         return {
@@ -42,6 +44,10 @@ const resolversAutenticacion = {
           }),
         };
       }
+    } catch(error){
+      // return error;
+      return null
+    }
     },
 
     refreshToken: async (parent, args, context) => {

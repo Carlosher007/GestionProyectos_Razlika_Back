@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { UserModel } from '../usuario/usuario.js';
 const { Schema, model } = mongoose;
+import validate from 'mongoose-validator';
 
 // interface Proyecto {
 //   nombre: string;
@@ -19,6 +20,18 @@ const projectSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+      validate: [
+        validate({
+          validator: 'isLength',
+          arguments: [5, 20],
+          message:
+            'El nombre del proyecto debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+        }),
+        validate({
+          validator: 'isAlphanumeric',
+          message: 'El nombre del proyecto debe ser alfanumerico',
+        }),
+      ],
     },
     presupuesto: {
       type: Number,
@@ -52,6 +65,18 @@ const projectSchema = new Schema(
         descripcion: {
           type: String,
           required: true,
+          validate: [
+            validate({
+              validator: 'isLength',
+              arguments: [5, 1000],
+              message:
+                'La descripcion debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+            }),
+            validate({
+              validator: 'isAlphanumeric',
+              message: 'La descripcion debe ser alfanumerico',
+            }),
+          ],
         },
         tipo: {
           type: String,
