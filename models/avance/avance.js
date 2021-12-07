@@ -20,12 +20,36 @@ const avanceSchema = new Schema({
   descripcion: {
     type: String,
     required: true,
+    validate: [
+      validate({
+        validator: 'isLength',
+        arguments: [8, 20],
+        message:
+          'La descripcion debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+      }),
+      validate({
+        validator: 'isAlphanumeric',
+        message: 'La descripcion debe ser alfanumerico',
+      }),
+    ],
   },
   observaciones: [
     {
       descripcion: {
         type: String,
         required: true,
+        validate: [
+          validate({
+            validator: 'isLength',
+            arguments: [8, 20],
+            message:
+              'La descripcion de la observacion debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+          }),
+          validate({
+            validator: 'isAlphanumeric',
+            message: 'La descripcion de la observacion debe ser alfanumerico',
+          }),
+        ],
       },
     },
   ],
