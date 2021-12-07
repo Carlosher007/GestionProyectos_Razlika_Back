@@ -45,7 +45,6 @@ const tiposUsuario = gql`
     UsuarioConTodo(_id: String!): Response!
     UsuariosBasicoAdmin: ResponseList!
     Estudiantes: ResponseList!
-    // 
   }
 
   type Error {
@@ -84,14 +83,12 @@ const tiposUsuario = gql`
 
 export { tiposUsuario };
 
-
-
-  // crearUsuario(
-  //     nombre: String!
-  //     apellido: String!
-  //     identificacion: String!
-  //     correo: String!
-  //     rol: Enum_Rol!
-  //     estado: Enum_EstadoUsuario
-  //     password: String!
-  //   ): Usuario
+// crearUsuario(
+//     nombre: String!
+//     apellido: String!
+//     identificacion: String!
+//     correo: String!
+//     rol: Enum_Rol!
+//     estado: Enum_EstadoUsuario
+//     password: String!
+//   ): Usuario

@@ -61,18 +61,6 @@ const tiposProyecto = gql`
     ProyectoConTodo(_id: String!): Response
   }
 
-  type Mutation {
-    crearProyecto(
-      nombre: String!
-      presupuesto: Float!
-      fechaInicio: Date!
-      fechaFin: Date!
-      estado: Enum_EstadoProyecto!
-      fase: Enum_FaseProyecto!
-      lider: String!
-      objetivos: [crearObjetivo]
-    ): Response
-
   type Error {
     path: String!
     message: String!
@@ -90,7 +78,17 @@ const tiposProyecto = gql`
     proyecto: [Proyecto]
   }
 
-
+  type Mutation {
+    crearProyecto(
+      nombre: String!
+      presupuesto: Float!
+      fechaInicio: Date!
+      fechaFin: Date!
+      estado: Enum_EstadoProyecto!
+      fase: Enum_FaseProyecto!
+      lider: String!
+      objetivos: [crearObjetivo]
+    ): Response
 
     editarProyecto(_id: String!, campos: camposProyecto!): Response
 
