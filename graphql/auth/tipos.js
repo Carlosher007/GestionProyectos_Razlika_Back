@@ -2,8 +2,9 @@ import { gql } from 'apollo-server-express';
 
 const tiposAutenticacion = gql`
   type Token {
+    succes: Boolean!
     token: String
-    error: String
+    errors: [Error]
   }
 
   type Mutation {
@@ -17,9 +18,9 @@ const tiposAutenticacion = gql`
       password: String!
     ): Token!
 
-    login(correo: String!, password: String!): Token
+    login(correo: String!, password: String!): Token!
 
-    refreshToken: Token
+    refreshToken: Token!
   }
 `;
 
