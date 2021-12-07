@@ -1,6 +1,7 @@
 import { UserModel } from '../../models/usuario/usuario.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../../utils/tokenUtils.js';
+import validate from 'mongoose-validator';
 
 const resolversAutenticacion = {
   Mutation: {

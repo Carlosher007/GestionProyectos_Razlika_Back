@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { ProjectModel } from '../proyecto/proyecto.js';
 import { UserModel } from '../usuario/usuario.js';
+import validate from 'mongoose-validator';
 
 const { Schema, model } = mongoose;
 
