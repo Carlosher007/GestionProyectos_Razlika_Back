@@ -39,12 +39,30 @@ const tiposUsuario = gql`
   }
 
   type Query {
-    UsuariosBasico: [Usuario]
-    Usuario(_id: String!): Usuario
-    UsuariosConTodo: [Usuario]
-    UsuarioConTodo(_id: String!): Usuario
-    UsuariosBasicoAdmin: [Usuario]
-    ProyectosUsuario(_id:String!):[Proyecto]
+    UsuariosBasico: ResponseList!
+    Usuario(_id: String!): Response!
+    UsuariosConTodo: ResponseList!
+    UsuarioConTodo(_id: String!): Response!
+    UsuariosBasicoAdmin: ResponseList!
+    Estudiantes: ResponseList!
+    // 
+  }
+
+  type Error {
+    path: String!
+    message: String!
+  }
+
+  type Response {
+    succes: Boolean!
+    errors: [Error]
+    usuario: Usuario
+  }
+
+  type ResponseList {
+    succes: Boolean!
+    errors: [Error]
+    usuario: [Usuario]
   }
 
   type Mutation {
@@ -56,17 +74,24 @@ const tiposUsuario = gql`
       rol: Enum_Rol!
       estado: Enum_EstadoUsuario
       password: String!
-    ): Usuario
+    ): Response!
 
-    editarUsuario(
-      _id: String!
-      campos: editarUsuario
-    ): Usuario
+    editarUsuario(_id: String!, campos: editarUsuario): Response!
 
-    editarEstado(_id: String!, estado: editarEstado): Usuario
-
-    eliminarUsuario(_id: String, correo: String): Usuario
+    eliminarUsuario(_id: String, correo: String): Response!
   }
 `;
 
 export { tiposUsuario };
+
+
+
+  // crearUsuario(
+  //     nombre: String!
+  //     apellido: String!
+  //     identificacion: String!
+  //     correo: String!
+  //     rol: Enum_Rol!
+  //     estado: Enum_EstadoUsuario
+  //     password: String!
+  //   ): Usuario

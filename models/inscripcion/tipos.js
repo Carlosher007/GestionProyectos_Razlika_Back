@@ -11,7 +11,24 @@ const tiposInscripcion = gql`
   }
 
   type Query {
-    Inscripciones: [Inscripcion]
+    Inscripciones: ResponseList
+  }
+
+  type Error {
+    path: String!
+    message: String!
+  }
+
+  type Response {
+    succes: Boolean!
+    errors: [Error]
+    inscripcion: Inscripcion
+  }
+
+  type ResponseList {
+    succes: Boolean!
+    errors: [Error]
+    inscripcion: [Inscripcion]
   }
 
   type Mutation {
@@ -21,10 +38,10 @@ const tiposInscripcion = gql`
       estado: Enum_EstadoInscripcion!
       proyecto: String!
       estudiante: String!
-    ): Inscripcion
+    ): Response
 
-    aprobarInscripcion(id: String!): Inscripcion
-    rechazarInscripcion(id: String!): Inscripcion
+    aprobarInscripcion(id: String!): Response
+    rechazarInscripcion(id: String!): Response
   }
 `;
 

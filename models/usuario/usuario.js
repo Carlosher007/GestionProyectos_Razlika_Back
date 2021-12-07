@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 // import { Enum_Rol, Enum_EstadoUsuario } from '../enums/enums';
-
+import validate from 'mongoose-validator';
 // interface User {
 //   correo: string;
 //   identificacion: string;
@@ -42,10 +42,34 @@ const userSchema = new Schema({
   nombre: {
     type: String,
     required: true,
+    validate: [
+      validate({
+        validator: 'isLength',
+        arguments: [2, 20],
+        message:
+          'El nombre de usuario debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+      }),
+      validate({
+        validator: 'isAlphanumeric',
+        message: 'El nombre de usuario debe ser alfanumerico',
+      }),
+    ],
   },
   apellido: {
     type: String,
     required: true,
+    validate: [
+      validate({
+        validator: 'isLength',
+        arguments: [2, 20],
+        message:
+          'El apellido de usuario debe contener entre {ARGS[0]} y {ARGS[1]}',
+      }),
+      validate({
+        validator: 'isAlphanumeric',
+        message: 'El apellido de usuario debe ser alfanumerico',
+      }),
+    ],
   },
   rol: {
     type: String,

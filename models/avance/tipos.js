@@ -29,28 +29,46 @@ const tiposAvance = gql`
   }
 
   type Query {
-    Avances: [Avance]
-    filtrarAvance(_id: String!): [Avance]
+    Avances: ResponseList
+    filtrarAvance(_idProyecto: String!): ResponseList
   }
+
+  type Error {
+    path: String!
+    message: String!
+  }
+
+  type Response {
+    succes: Boolean!
+    errors: [Error]
+    avance: Avance
+  }
+
+  type ResponseList {
+    succes: Boolean!
+    errors: [Error]
+    avance: [Avance]
+  }
+
   type Mutation {
     crearAvance(
       fecha: Date!
       descripcion: String!
       proyecto: String!
       creadoPor: String!
-    ): Avance
+    ): Response
 
-    editarAvance(_id: String!, campos: camposAvance!): Avance
+    editarAvance(_id: String!, campos: camposAvance!): Response
 
-    crearObservacion(idAvance: String!, campos: camposObservacion!): Avance
+    crearObservacion(idAvance: String!, campos: camposObservacion!): Response
 
     editarObservacion(
       idAvance: String!
       indexObservacion: Int!
       campos: editarCamposObservacion!
-    ): Avance
+    ): Response
 
-    eliminarObservacion(idAvance: String!, idObservacion: String!): Avance
+    eliminarObservacion(idAvance: String!, idObservacion: String!): Response
   }
 `;
 
