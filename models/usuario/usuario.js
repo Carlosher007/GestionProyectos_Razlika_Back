@@ -42,34 +42,22 @@ const userSchema = new Schema({
   nombre: {
     type: String,
     required: true,
-    validate: [
-      validate({
-        validator: 'isLength',
-        arguments: [2, 20],
-        message:
-          'El nombre de usuario debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
-      }),
-      validate({
-        validator: 'isAlphanumeric',
-        message: 'El nombre de usuario debe ser alfanumerico',
-      }),
-    ],
+    validate: validate({
+      validator: 'isLength',
+      arguments: [2, 150],
+      message:
+        'El nombre del usuario debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+    }),
   },
   apellido: {
     type: String,
     required: true,
-    validate: [
-      validate({
-        validator: 'isLength',
-        arguments: [2, 20],
-        message:
-          'El apellido de usuario debe contener entre {ARGS[0]} y {ARGS[1]}',
-      }),
-      validate({
-        validator: 'isAlphanumeric',
-        message: 'El apellido de usuario debe ser alfanumerico',
-      }),
-    ],
+    validate: validate({
+      validator: 'isLength',
+      arguments: [2, 150],
+      message:
+        'El nombre del usuario debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+    }),
   },
   rol: {
     type: String,

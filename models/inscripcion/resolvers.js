@@ -1,5 +1,6 @@
 import { InscriptionModel } from './inscripcion.js';
-
+import { UserModel } from '../usuario/usuario.js';
+import { ProjectModel } from '../proyecto/proyecto.js';
 const formatErrors = (error, otherErrors) => {
   const errors = error.errors;
   let objErrors = [];
@@ -29,6 +30,14 @@ const formatErrors = (error, otherErrors) => {
 };
 
 const resolverInscripciones = {
+  Inscripcion: {
+    proyecto: async (parent, args, context) => {
+      return await ProjectModel.findOne({ _id: parent.proyecto });
+    },
+    estudiante: async (parent, args, context) => {
+      return await UserModel.findOne({ _id: parent.estudiante });
+    },
+  },
   Query: {
     Inscripciones: async (parent, args) => {
       const otherErrors = [];
@@ -50,27 +59,70 @@ const resolverInscripciones = {
         };
       }
     },
+    InscripcionesEstudiantes: async (parent, args) => {
+      const otherErrors = [];
+      try {
+        const usuario = await UserModel.findOne({ _id: args._id });
+        if (usuario.rol === 'LIDER') {
+          const inscripciones = await InscriptionModel.find();
+          if (otherErrors.length) {
+            throw otherErrors;
+          }
+          return {
+            succes: true,
+            errors: [],
+            inscripcion: inscripciones,
+          };
+        } else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            proyecto: null,
+          };
+        }
+      } catch (error) {
+        return {
+          succes: false,
+          errors: formatErrors(error, otherErrors),
+          inscripcion: null,
+        };
+      }
+    },
   },
   Mutation: {
     crearInscripcion: async (parent, args) => {
       const otherErrors = [];
       try {
-        const inscripcionCreada = await InscriptionModel.create({
-          fechaIngreso: args.fechaIngreso,
-          fechaEgreso: args.fechaEgreso,
-          estado: args.estado,
-          proyecto: args.proyecto,
-          estudiante: args.estudiante,
-        });
+        const usuario = await UserModel.findOne({ _id: args._id });
+        if (usuario.rol === 'ESTUDIANTE') {
+          const inscripcionCreada = await InscriptionModel.create({
+            fechaIngreso: Date.now(),
+            estado: args.estado,
+            proyecto: args.proyecto,
+            estudiante: usuario._id,
+          });
 
-        if (otherErrors.length) {
-          throw otherErrors;
+          if (otherErrors.length) {
+            throw otherErrors;
+          }
+          return {
+            succes: true,
+            errors: [],
+            inscripcion: inscripcionCreada,
+          };
+        } else {
+          const uknownError = {};
+          uknownError.path = 'rol';
+          uknownError.message = 'El rol no es valido';
+          return {
+            succes: false,
+            errors: [uknownError],
+            proyecto: null,
+          };
         }
-        return {
-          succes: true,
-          errors: [],
-          inscripcion: inscripcionCreada,
-        };
       } catch (error) {
         return {
           succes: false,
