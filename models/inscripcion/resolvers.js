@@ -166,7 +166,7 @@ const resolverInscripciones = {
           args.id,
           {
             estado: 'RECHAZADO',
-            fechaIngreso: Date.now(),
+            fechaEgreso: Date.now(),
           },
           { new: true }
         );

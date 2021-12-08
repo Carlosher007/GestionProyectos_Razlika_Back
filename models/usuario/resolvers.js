@@ -227,12 +227,6 @@ const resolversUsuario = {
     crearUsuario: async (parent, args) => {
       const otherErrors = [];
       try {
-        if (args.password.length < 8) {
-          otherErrors.push({
-            path: 'password',
-            message: 'La contraseña debe tener mas de ocho caracteres',
-          });
-        }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(args.password, salt);
         const usuarioCreado = await UserModel.create({
