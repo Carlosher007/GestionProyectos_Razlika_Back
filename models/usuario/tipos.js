@@ -78,6 +78,15 @@ const tiposUsuario = gql`
 
     editarUsuario(_id: String!, campos: editarUsuario): Response!
 
+    editarUsuarioD(
+      _id: String
+      nombre: String
+      apellido: String
+      identificacion: String
+      correo: String
+      estado: Enum_EstadoUsuario
+    ): Response!
+
     editarUsuarioAdministrador(
       _idUsuario: String!
       _id: String

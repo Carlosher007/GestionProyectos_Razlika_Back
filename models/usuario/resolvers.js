@@ -1,4 +1,6 @@
 import { UserModel } from './usuario.js';
+import { ProjectModel } from '../proyecto/proyecto.js';
+import { InscriptionModel } from '../inscripcion/inscripcion.js';
 import bcrypt from 'bcrypt';
 
 const formatErrors = (error, otherErrors) => {
@@ -268,6 +270,39 @@ const resolversUsuario = {
         const usuarioEditado = await UserModel.findByIdAndUpdate(
           args._id,
           { ...args.campos },
+          { new: true }
+        );
+
+        if (otherErrors.length) {
+          throw otherErrors;
+        }
+
+        return {
+          succes: true,
+          errors: [],
+          usuario: usuarioEditado,
+        };
+      } catch (error) {
+        return {
+          succes: false,
+          errors: formatErrors(error, otherErrors),
+          usuario: null,
+        };
+      }
+    },
+
+    editarUsuarioD: async (parent, args) => {
+      const otherErrors = [];
+      try {
+        const usuarioEditado = await UserModel.findByIdAndUpdate(
+          args._id,
+          {
+            nombre: args.nombre,
+            apellido: args.apellido,
+            identificacion: args.identificacion,
+            correo: args.correo,
+            estado: args.estado,
+          },
           { new: true }
         );
 

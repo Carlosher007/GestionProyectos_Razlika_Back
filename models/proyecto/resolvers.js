@@ -130,9 +130,7 @@ const resolversProyecto = {
       try {
         const usuario = await UserModel.findOne({ _id: args._id });
         if (usuario.rol === 'ESTUDIANTE') {
-          const proyectos = await ProjectModel.findOne({
-            _id: args._idProyecto,
-          }).populate([
+          const proyectos = await ProjectModel.find().populate([
             // { path: 'lider' },
             { path: 'avances' },
             // { path: 'inscripciones', populate: { path: 'estudiante' } },

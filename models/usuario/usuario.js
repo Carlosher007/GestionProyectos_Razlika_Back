@@ -44,9 +44,9 @@ const userSchema = new Schema({
     required: true,
     validate: validate({
       validator: 'isLength',
-      arguments: [8, 150],
+      arguments: [2, 150],
       message:
-        'El nombre del proyecto debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+        'El nombre del usuario debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
     }),
   },
   apellido: {
@@ -54,9 +54,9 @@ const userSchema = new Schema({
     required: true,
     validate: validate({
       validator: 'isLength',
-      arguments: [8, 150],
+      arguments: [2, 150],
       message:
-        'El nombre del proyecto debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
+        'El nombre del usuario debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
     }),
   },
   rol: {

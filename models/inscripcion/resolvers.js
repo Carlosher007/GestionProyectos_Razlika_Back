@@ -1,6 +1,6 @@
 import { InscriptionModel } from './inscripcion.js';
 import { UserModel } from '../usuario/usuario.js';
-
+import { ProjectModel } from '../proyecto/proyecto.js';
 const formatErrors = (error, otherErrors) => {
   const errors = error.errors;
   let objErrors = [];
