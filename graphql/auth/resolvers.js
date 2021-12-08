@@ -73,12 +73,12 @@ const resolversAutenticacion = {
     login: async (parent, args) => {
       const otherErrors = [];
       try {
-          const usuarioEcontrado = await UserModel.findOne({
-            correo: args.correo,
-          });
+        const usuarioEcontrado = await UserModel.findOne({
+          correo: args.correo,
+        });
         if (await bcrypt.compare(args.password, usuarioEcontrado.password)) {
           if (otherErrors.length) {
-            console.log("other")
+            console.log('other');
             throw otherErrors;
           }
           return {
@@ -98,17 +98,13 @@ const resolversAutenticacion = {
         const uknownError = {};
         uknownError.path = 'email | password';
         uknownError.message = 'datos no validos';
-        console.log("1",uknownError);
+        console.log('1', uknownError);
         return {
           succes: false,
-          token: "null",
-          errors: {uknownError},
+          token: 'null',
+          errors: { uknownError },
         };
       }
-    } catch(error){
-      // return error;
-      return null
-    }
     },
 
     refreshToken: async (parent, args, context) => {
@@ -124,7 +120,7 @@ const resolversAutenticacion = {
           return {
             succes: false,
             token: null,
-            errors: [uknownError]
+            errors: [uknownError],
           };
           // return {
           //   error: 'token no valido',
