@@ -76,32 +76,34 @@ const resolversAutenticacion = {
         const usuarioEcontrado = await UserModel.findOne({
           correo: args.correo,
         });
-        if (await bcrypt.compare(args.password, usuarioEcontrado.password)) {
-          if (otherErrors.length) {
-            console.log('other');
-            throw otherErrors;
+        if (usuarioEcontrado) {
+          if (await bcrypt.compare(args.password, usuarioEcontrado.password)) {
+            if (otherErrors.length) {
+              console.log('other');
+              throw otherErrors;
+            }
+            return {
+              succes: true,
+              token: generateToken({
+                _id: usuarioEcontrado._id,
+                nombre: usuarioEcontrado.nombre,
+                apellido: usuarioEcontrado.apellido,
+                identificacion: usuarioEcontrado.identificacion,
+                correo: usuarioEcontrado.correo,
+                rol: usuarioEcontrado.rol,
+                errors: [],
+              }),
+            };
           }
-          return {
-            succes: true,
-            token: generateToken({
-              _id: usuarioEcontrado._id,
-              nombre: usuarioEcontrado.nombre,
-              apellido: usuarioEcontrado.apellido,
-              identificacion: usuarioEcontrado.identificacion,
-              correo: usuarioEcontrado.correo,
-              rol: usuarioEcontrado.rol,
-              errors: [],
-            }),
-          };
         }
       } catch (error) {
         const uknownError = {};
         uknownError.path = 'email | password';
         uknownError.message = 'datos no validos';
-        console.log('1', uknownError);
+        // console.log('1', uknownError);
         return {
           succes: false,
-          token: 'null',
+          token: null,
           errors: { uknownError },
         };
       }
