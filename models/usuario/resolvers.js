@@ -33,6 +33,26 @@ const formatErrors = (error, otherErrors) => {
 
 const resolversUsuario = {
   Query: {
+    Usuarios: async (parent, args, context) => {
+      const otherErrors = [];
+      try {
+        const usuarios = await UserModel.find({ ...args.filtro });
+        if (otherErrors.length) {
+          throw otherErrors;
+        }
+        return {
+          succes: true,
+          errors: [],
+          usuario: usuarios,
+        };
+      } catch (error) {
+        return {
+          succes: false,
+          errors: formatErrors(error, otherErrors),
+          usuario: null,
+        };
+      }
+    },
     UsuariosBasico: async (parent, args, context) => {
       const otherErrors = [];
       try {

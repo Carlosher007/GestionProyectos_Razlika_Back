@@ -23,7 +23,7 @@ const avanceSchema = new Schema({
     required: true,
     validate: validate({
       validator: 'isLength',
-      arguments: [8, 150],
+      arguments: [8, 1000],
       message:
         'El nombre del proyecto debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
     }),
@@ -35,7 +35,7 @@ const avanceSchema = new Schema({
         required: true,
         validate: validate({
           validator: 'isLength',
-          arguments: [8, 150],
+          arguments: [8, 1000],
           message:
             'El nombre del proyecto debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
         }),

@@ -61,7 +61,7 @@ const projectSchema = new Schema(
           required: true,
           validate: validate({
             validator: 'isLength',
-            arguments: [8, 300],
+            arguments: [8, 1000],
             message:
               'El nombre del proyecto debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
           }),

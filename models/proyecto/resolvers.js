@@ -315,8 +315,6 @@ const resolversProyecto = {
       try {
         const proyectoCreado = await ProjectModel.create({
           nombre: args.nombre,
-          estado: args.estado,
-          fase: args.fase,
           fechaInicio: args.fechaInicio,
           fechaFin: args.fechaFin,
           presupuesto: args.presupuesto,
@@ -347,8 +345,6 @@ const resolversProyecto = {
         if (usuario.rol === 'LIDER') {
           const proyectoCreado = await ProjectModel.create({
             nombre: args.nombre,
-            estado: args.estado,
-            fase: args.fase,
             fechaInicio: Date.now(),
             fechaFin: args.fechaFin,
             presupuesto: args.presupuesto,
