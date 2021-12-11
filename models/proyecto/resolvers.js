@@ -1,6 +1,7 @@
 import { ProjectModel } from './proyecto.js';
 //
 import { UserModel } from '../usuario/usuario.js';
+import {InscriptionModel} from '../inscripcion/inscripcion.js'
 const formatErrors = (error, otherErrors) => {
   const errors = error.errors;
   let objErrors = [];
@@ -31,15 +32,20 @@ const formatErrors = (error, otherErrors) => {
 };
 
 const resolversProyecto = {
-
-  // Proyecto: {
-  //   lider: async (parent, args, context) => {
-  //     const usr = await UserModel.findOne({
-  //       _id: parent.lider.toString(),
-  //     });
-  //     return usr;
-  //   },
-  // },
+  Proyecto: {
+    lider: async (parent, args, context) => {
+      const usr = await UserModel.findOne({
+        _id: parent.lider.toString(),
+      });
+      return usr;
+    },
+    inscripciones: async (parent, args, context) => {
+      const inscripciones = await InscriptionModel.find({
+        proyecto: parent._id,
+      });
+      return inscripciones;
+    },
+  },
   Query: {
     ProyectosBasico: async (parent, args, context) => {
       const otherErrors = [];
@@ -168,12 +174,7 @@ const resolversProyecto = {
         if (usuario.rol === 'ESTUDIANTE') {
           const proyecto = await ProjectModel.findOne({
             _id: args._idProyecto,
-          }).populate([
-            { path: 'avances' ,populate:[
-              {path:'creadoPor'},
-            ]
-            },
-          ]);
+          }).populate([{ path: 'avances', populate: [{ path: 'creadoPor' }] }]);
           if (otherErrors.length) {
             throw otherErrors;
           }

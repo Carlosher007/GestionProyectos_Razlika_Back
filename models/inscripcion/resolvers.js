@@ -96,13 +96,12 @@ const resolverInscripciones = {
     crearInscripcion: async (parent, args) => {
       const otherErrors = [];
       try {
-        const usuario = await UserModel.findOne({ _id: args._id });
-        if (usuario.rol === 'ESTUDIANTE') {
+        // const usuario = await UserModel.findOne({ _id: args._id });
+        // if (usuario.rol === 'ESTUDIANTE') {
           const inscripcionCreada = await InscriptionModel.create({
             fechaIngreso: Date.now(),
-            estado: args.estado,
             proyecto: args.proyecto,
-            estudiante: usuario._id,
+            estudiante: args.estudiante,
           });
 
           if (otherErrors.length) {
@@ -113,16 +112,17 @@ const resolverInscripciones = {
             errors: [],
             inscripcion: inscripcionCreada,
           };
-        } else {
-          const uknownError = {};
-          uknownError.path = 'rol';
-          uknownError.message = 'El rol no es valido';
-          return {
-            succes: false,
-            errors: [uknownError],
-            proyecto: null,
-          };
-        }
+        // }
+        // else {
+        //   const uknownError = {};
+        //   uknownError.path = 'rol';
+        //   uknownError.message = 'El rol no es valido';
+        //   return {
+        //     succes: false,
+        //     errors: [uknownError],
+        //     proyecto: null,
+        //   };
+        // }
       } catch (error) {
         return {
           succes: false,
