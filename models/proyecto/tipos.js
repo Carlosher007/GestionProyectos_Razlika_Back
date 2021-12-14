@@ -74,10 +74,10 @@ const tiposProyecto = gql`
     Proyecto(_id: String!): Response!
     ProyectosConTodo: ResponseList!
     ProyectoConTodo(_id: String!): Response!
-    ProyectosBasicoAdmin(_id: String!): ResponseList!
-    VerProyectosLidero(_id: String): ResponseList!
-    VerProyectosLideroActivo(_id: String): ResponseList!
-    VerProyectosEstudiante(_id: String): ResponseList!
+    ProyectosBasicoAdmin: ResponseList!
+    VerProyectosLidero: ResponseList!
+    VerProyectosLideroActivo: ResponseList!
+    VerProyectosEstudiante: ResponseList!
     ProyectoConAvanceEstudiante(_id: String, _idProyecto: String!): Response
   }
 

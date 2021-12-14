@@ -6,7 +6,7 @@ const tiposInscripcion = gql`
     estado: Enum_EstadoInscripcion!
     fechaIngreso: Date
     fechaEgreso: Date
-    proyecto: Proyecto!
+    proyecto(lider: String): Proyecto
     estudiante: Usuario!
   }
 
@@ -34,7 +34,6 @@ const tiposInscripcion = gql`
 
   type Mutation {
     crearInscripcion(proyecto: String!, estudiante: String!): Response
-
     aprobarInscripcion(id: String!): Response
     rechazarInscripcion(id: String!): Response
   }

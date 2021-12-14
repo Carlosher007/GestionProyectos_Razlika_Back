@@ -39,10 +39,25 @@ const resolverInscripciones = {
     },
   },
   Query: {
-    Inscripciones: async (parent, args) => {
+    // INSCRIPCIONES QUE YO LIDERO
+    Inscripciones: async (parent, args, context) => {
       const otherErrors = [];
       try {
-        const inscripciones = await InscriptionModel.find();
+        let filtro = {};
+        if (context.userData) {
+          if (context.userData.rol === 'LIDER') {
+            const projects = await ProjectModel.find({
+              lider: context.userData._id,
+            });
+            const projectList = projects.map((p) => p._id.toString());
+            filtro = {
+              proyecto: {
+                $in: projectList,
+              },
+            };
+          }
+        }
+        const inscripciones = await InscriptionModel.find({ ...filtro });
         if (otherErrors.length) {
           throw otherErrors;
         }
@@ -98,20 +113,20 @@ const resolverInscripciones = {
       try {
         // const usuario = await UserModel.findOne({ _id: args._id });
         // if (usuario.rol === 'ESTUDIANTE') {
-          const inscripcionCreada = await InscriptionModel.create({
-            fechaIngreso: Date.now(),
-            proyecto: args.proyecto,
-            estudiante: args.estudiante,
-          });
+        const inscripcionCreada = await InscriptionModel.create({
+          fechaIngreso: Date.now(),
+          proyecto: args.proyecto,
+          estudiante: args.estudiante,
+        });
 
-          if (otherErrors.length) {
-            throw otherErrors;
-          }
-          return {
-            succes: true,
-            errors: [],
-            inscripcion: inscripcionCreada,
-          };
+        if (otherErrors.length) {
+          throw otherErrors;
+        }
+        return {
+          succes: true,
+          errors: [],
+          inscripcion: inscripcionCreada,
+        };
         // }
         // else {
         //   const uknownError = {};

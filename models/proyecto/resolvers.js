@@ -1,7 +1,9 @@
 import { ProjectModel } from './proyecto.js';
 //
 import { UserModel } from '../usuario/usuario.js';
-import {InscriptionModel} from '../inscripcion/inscripcion.js'
+import { ModeloAvance } from '../avance/avance.js';
+
+import { InscriptionModel } from '../inscripcion/inscripcion.js';
 const formatErrors = (error, otherErrors) => {
   const errors = error.errors;
   let objErrors = [];
@@ -45,6 +47,12 @@ const resolversProyecto = {
       });
       return inscripciones;
     },
+    avances: async (parent, args, context) => {
+      const avances = await ModeloAvance.find({
+        proyecto: parent._id,
+      });
+      return avances;
+    },
   },
   Query: {
     ProyectosBasico: async (parent, args, context) => {
@@ -70,21 +78,31 @@ const resolversProyecto = {
     ProyectosBasicoAdmin: async (parent, args, context) => {
       const otherErrors = [];
       try {
-        const usuario = await UserModel.findOne({ _id: args._id });
-        if (usuario.rol === 'ADMINISTRADOR') {
-          const proyectos = await ProjectModel.find();
-          if (otherErrors.length) {
-            throw otherErrors;
+        if (context.userData) {
+          if (context.userData.rol === 'ADMINISTRADOR') {
+            const proyectos = await ProjectModel.find();
+            if (otherErrors.length) {
+              throw otherErrors;
+            }
+            return {
+              succes: true,
+              errors: [],
+              proyecto: proyectos,
+            };
+          } else {
+            const uknownError = {};
+            uknownError.path = 'rol';
+            uknownError.message = 'El rol no es valido';
+            return {
+              succes: false,
+              errors: [uknownError],
+              proyecto: null,
+            };
           }
-          return {
-            succes: true,
-            errors: [],
-            proyecto: proyectos,
-          };
         } else {
           const uknownError = {};
-          uknownError.path = 'rol';
-          uknownError.message = 'El rol no es valido';
+          uknownError.path = 'token';
+          uknownError.message = 'No hay token';
           return {
             succes: false,
             errors: [uknownError],
@@ -102,21 +120,33 @@ const resolversProyecto = {
     VerProyectosLidero: async (parent, args, context) => {
       const otherErrors = [];
       try {
-        const usuario = await UserModel.findOne({ _id: args._id });
-        if (usuario.rol === 'LIDER') {
-          const proyectos = await ProjectModel.find({ lider: usuario._id });
-          if (otherErrors.length) {
-            throw otherErrors;
+        if (context.userData) {
+          if (context.userData.rol === 'LIDER') {
+            const proyectos = await ProjectModel.find({
+              lider: context.userData._id,
+            });
+            if (otherErrors.length) {
+              throw otherErrors;
+            }
+            return {
+              succes: true,
+              errors: [],
+              proyecto: proyectos,
+            };
+          } else {
+            const uknownError = {};
+            uknownError.path = 'rol';
+            uknownError.message = 'El rol no es valido';
+            return {
+              succes: false,
+              errors: [uknownError],
+              proyecto: null,
+            };
           }
-          return {
-            succes: true,
-            errors: [],
-            proyecto: proyectos,
-          };
         } else {
           const uknownError = {};
-          uknownError.path = 'rol';
-          uknownError.message = 'El rol no es valido';
+          uknownError.path = 'token';
+          uknownError.message = 'No hay token';
           return {
             succes: false,
             errors: [uknownError],
@@ -134,25 +164,35 @@ const resolversProyecto = {
     VerProyectosEstudiante: async (parent, args, context) => {
       const otherErrors = [];
       try {
-        const usuario = await UserModel.findOne({ _id: args._id });
-        if (usuario.rol === 'ESTUDIANTE') {
-          const proyectos = await ProjectModel.find().populate([
-            // { path: 'lider' },
-            { path: 'avances' },
-            // { path: 'inscripciones', populate: { path: 'estudiante' } },
-          ]);
-          if (otherErrors.length) {
-            throw otherErrors;
+        if (context.userData) {
+          if (context.userData.rol === 'ESTUDIANTE') {
+            const proyectos = await ProjectModel.find().populate([
+              // { path: 'lider' },
+              { path: 'avances' },
+              // { path: 'inscripciones', populate: { path: 'estudiante' } },
+            ]);
+            if (otherErrors.length) {
+              throw otherErrors;
+            }
+            return {
+              succes: true,
+              errors: [],
+              proyecto: proyectos,
+            };
+          } else {
+            const uknownError = {};
+            uknownError.path = 'rol';
+            uknownError.message = 'El rol no es valido';
+            return {
+              succes: false,
+              errors: [uknownError],
+              proyecto: null,
+            };
           }
-          return {
-            succes: true,
-            errors: [],
-            proyecto: proyectos,
-          };
         } else {
           const uknownError = {};
-          uknownError.path = 'rol';
-          uknownError.message = 'El rol no es valido';
+          uknownError.path = 'token';
+          uknownError.message = 'No hay token';
           return {
             succes: false,
             errors: [uknownError],
@@ -204,24 +244,34 @@ const resolversProyecto = {
     VerProyectosLideroActivo: async (parent, args, context) => {
       const otherErrors = [];
       try {
-        const usuario = await UserModel.findOne({ _id: args._id });
-        if (usuario.rol === 'LIDER') {
-          const proyectos = await ProjectModel.find({
-            lider: usuario._id,
-            estado: 'ACTIVO',
-          }).populate([{ path: 'lider' }]);
-          if (otherErrors.length) {
-            throw otherErrors;
+        if (context.userData) {
+          if (context.userData.rol === 'LIDER') {
+            const proyectos = await ProjectModel.find({
+              lider: usuario._id,
+              estado: 'ACTIVO',
+            }).populate([{ path: 'lider' }]);
+            if (otherErrors.length) {
+              throw otherErrors;
+            }
+            return {
+              succes: true,
+              errors: [],
+              proyecto: proyectos,
+            };
+          } else {
+            const uknownError = {};
+            uknownError.path = 'rol';
+            uknownError.message = 'El rol no es valido';
+            return {
+              succes: false,
+              errors: [uknownError],
+              proyecto: null,
+            };
           }
-          return {
-            succes: true,
-            errors: [],
-            proyecto: proyectos,
-          };
         } else {
           const uknownError = {};
-          uknownError.path = 'rol';
-          uknownError.message = 'El rol no es valido';
+          uknownError.path = 'token';
+          uknownError.message = 'No hay token';
           return {
             succes: false,
             errors: [uknownError],

@@ -92,7 +92,7 @@ const resolversAvance = {
       try {
         const usuario = await UserModel.findOne({ _id: args._id });
         if (usuario.rol === 'ESTUDIANTE') {
-          const avanceCreado = ModeloAvance.create({
+          const avanceCreado = await ModeloAvance.create({
             fecha: Date.now(),
             descripcion: args.descripcion,
             proyecto: args.proyecto,
