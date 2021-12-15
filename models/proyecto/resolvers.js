@@ -428,6 +428,7 @@ const resolversProyecto = {
         };
       }
     },
+    // 
     editarProyecto: async (parent, args) => {
       const otherErrors = [];
       try {

@@ -29,7 +29,6 @@ const tiposProyecto = gql`
     fechaFin: Date
     estado: Enum_EstadoProyecto
     fase: Enum_FaseProyecto
-    lider: String
   }
 
   input editarProyecto {
@@ -39,7 +38,6 @@ const tiposProyecto = gql`
     fechaFin: Date
     estado: Enum_EstadoProyecto
     fase: Enum_FaseProyecto
-    lider: String
   }
 
   input editarProyectoActivo {
@@ -116,7 +114,7 @@ const tiposProyecto = gql`
       objetivos: [crearObjetivo]
     ): Response
 
-    editarProyecto(_id: String!, campos: camposProyecto!): Response!
+    editarProyecto(_id: String!, campos: camposProyecto): Response!
 
     editarProyectoAdministrador(
       _idProyecto: String!
