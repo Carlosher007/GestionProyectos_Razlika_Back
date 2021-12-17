@@ -117,6 +117,7 @@ const resolversProyecto = {
         };
       }
     },
+    //
     VerProyectosLidero: async (parent, args, context) => {
       const otherErrors = [];
       try {
@@ -428,7 +429,7 @@ const resolversProyecto = {
         };
       }
     },
-    // 
+    //
     editarProyecto: async (parent, args) => {
       const otherErrors = [];
       try {
@@ -533,12 +534,20 @@ const resolversProyecto = {
           const proyectoEliminado = await ProjectModel.findOneAndDelete({
             _id: args._id,
           });
-          return proyectoEliminado;
+          return {
+            succes: true,
+            errors: formatErrors(error, otherErrors),
+            proyecto: proyectoEliminado,
+          };
         } else if (Object.keys(args).includes('nombre')) {
           const proyectoEliminado = await ProjectModel.findOneAndDelete({
             nombre: args.nombre,
           });
-          return proyectoEliminado;
+          return {
+            succes: true,
+            errors: formatErrors(error, otherErrors),
+            proyecto: proyectoEliminado,
+          };
         }
       } catch (error) {
         return {

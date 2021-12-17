@@ -23,6 +23,10 @@ const tiposAvance = gql`
     descripcion: String
   }
 
+  input crearObservaciones{
+    descripcion: String!
+  }
+
   type Avance {
     _id: ID!
     fecha: Date!
@@ -56,26 +60,24 @@ const tiposAvance = gql`
 
   type Mutation {
     crearAvance(
-      _id: String!
       descripcion: String!
       proyecto: String!
+      observaciones: [crearObservaciones]
     ): Response!
 
-    editarAvance(
-      _id: String
-      _idAvance: String!
-      descripcion: String!
-    ): Response!
+    editarAvance(_idAvance: String!, campos: camposAvance): Response!
+
+    eliminarAvance(_id: String, nombre: String): Response!
 
     crearObservacion(idAvance: String!, campos: camposObservacion!): Response!
 
     editarObservacion(
       idAvance: String!
       indexObservacion: Int!
-      campos: editarCamposObservacion!
+      campos: editarCamposObservacion
     ): Response!
 
-    eliminarObservacion(idAvance: String!, idObservacion: String!): Response!
+    eliminarObservacion(idAvance: String!, idOb: String!): Response!
   }
 `;
 

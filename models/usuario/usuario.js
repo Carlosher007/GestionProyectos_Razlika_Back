@@ -59,6 +59,10 @@ const userSchema = new Schema({
         'El nombre del usuario debe contener entre {ARGS[0]} y {ARGS[1]} caracteres',
     }),
   },
+  foto: {
+    type: String,
+    required: false,
+  },
   rol: {
     type: String,
     required: true,

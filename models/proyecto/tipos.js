@@ -90,6 +90,11 @@ const tiposProyecto = gql`
     proyecto: Proyecto
   }
 
+  input camposObjetivod {
+    descripcion: String
+    tipo: Enum_TipoObjetivo
+  }
+
   type ResponseList {
     succes: Boolean!
     errors: [Error]
@@ -135,7 +140,7 @@ const tiposProyecto = gql`
     editarObjetivo(
       idProyecto: String!
       indexObjetivo: Int!
-      campos: camposEditarObjetivo!
+      campos: camposObjetivod
     ): Response!
 
     eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Response!

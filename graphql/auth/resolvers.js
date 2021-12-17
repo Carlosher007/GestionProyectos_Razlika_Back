@@ -73,27 +73,44 @@ const resolversAutenticacion = {
     login: async (parent, args) => {
       const otherErrors = [];
       try {
-        const usuarioEcontrado = await UserModel.findOne({
+        const usuarioEncontrado = await UserModel.findOne({
           correo: args.correo,
         });
-        if (usuarioEcontrado) {
-          if (await bcrypt.compare(args.password, usuarioEcontrado.password)) {
-            if (otherErrors.length) {
-              console.log('other');
-              throw otherErrors;
-            }
-            return {
-              succes: true,
-              token: generateToken({
-                _id: usuarioEcontrado._id,
-                nombre: usuarioEcontrado.nombre,
-                apellido: usuarioEcontrado.apellido,
-                identificacion: usuarioEcontrado.identificacion,
-                correo: usuarioEcontrado.correo,
-                rol: usuarioEcontrado.rol,
+        if (usuarioEncontrado) {
+          if (await bcrypt.compare(args.password, usuarioEncontrado.password)) {
+            if (usuarioEncontrado.estado === 'AUTORIZADO') {
+              if (otherErrors.length) {
+                console.log('other');
+                throw otherErrors;
+              }
+              return {
+                succes: true,
+                token: generateToken({
+                  _id: usuarioEncontrado._id,
+                  nombre: usuarioEncontrado.nombre,
+                  apellido: usuarioEncontrado.apellido,
+                  identificacion: usuarioEncontrado.identificacion,
+                  correo: usuarioEncontrado.correo,
+                  rol: usuarioEncontrado.rol,
+                  foto: usuarioEncontrado.foto,
+                }),
                 errors: [],
-              }),
-            };
+              };
+            } else {
+              const uknownError = {};
+              uknownError.path = 'estado';
+              if (usuarioEncontrado.estado === 'PENDIENTE'){
+                uknownError.message = 'Tu estado esta en pendiente';
+              }
+              if (usuarioEncontrado.estado === 'NO_AUTORIZADO') {
+                uknownError.message = 'No puede entrar, no estas autorizado';
+              }
+              return {
+                succes: false,
+                errors: [uknownError],
+                token: null,
+              };
+            }
           }
         }
       } catch (error) {
@@ -140,6 +157,7 @@ const resolversAutenticacion = {
               identificacion: context.userData.identificacion,
               correo: context.userData.correo,
               rol: context.userData.rol,
+              foto: context.userData.foto,
             }),
             errors: [],
           };

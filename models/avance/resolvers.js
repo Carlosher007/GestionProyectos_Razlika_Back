@@ -31,11 +31,13 @@ const formatErrors = (error, otherErrors) => {
 };
 
 const resolversAvance = {
-  // proyecto: async (parent, args, context) => {
-  //   return await ProjectModel.findOne({ _id: parent.proyecto });
-  // },
-  // creadoPor: async (parent, args, context) => {
-  //   return await UserModel.findOne({ _id: parent.estudiante });
+  // Avance:{
+  //   proyecto: async (parent, args, context) => {
+  //     return await ProjectModel.findOne({ _id: parent.proyecto });
+  //   },
+  //   creadoPor: async (parent, args, context) => {
+  //     return await UserModel.findOne({ _id: parent.estudiante });
+  //   },
   // },
   Query: {
     Avances: async (parent, args) => {
@@ -87,29 +89,42 @@ const resolversAvance = {
     },
   },
   Mutation: {
-    crearAvance: async (parents, args) => {
+    crearAvance: async (parents, args, context) => {
       const otherErrors = [];
       try {
-        const usuario = await UserModel.findOne({ _id: args._id });
-        if (usuario.rol === 'ESTUDIANTE') {
-          const avanceCreado = await ModeloAvance.create({
-            fecha: Date.now(),
-            descripcion: args.descripcion,
-            proyecto: args.proyecto,
-            creadoPor: usuario._id,
-          });
-          if (otherErrors.length) {
-            throw otherErrors;
+        if (context.userData) {
+          // if (true) {
+          if (context.userData.rol === 'ESTUDIANTE') {
+            // if (true) {
+            const avanceCreado = await ModeloAvance.create({
+              fecha: Date.now(),
+              descripcion: args.descripcion,
+              proyecto: args.proyecto,
+              // creadoPor: '61b0dafae9dba48ec10a3163',
+              creadoPor: context.userData._id,
+            });
+            if (otherErrors.length) {
+              throw otherErrors;
+            }
+            return {
+              succes: true,
+              errors: [],
+              avance: avanceCreado,
+            };
+          } else {
+            const uknownError = {};
+            uknownError.path = 'rol';
+            uknownError.message = 'El rol no es valido';
+            return {
+              succes: false,
+              errors: [uknownError],
+              avance: null,
+            };
           }
-          return {
-            succes: true,
-            errors: [],
-            avance: avanceCreado,
-          };
         } else {
           const uknownError = {};
-          uknownError.path = 'rol';
-          uknownError.message = 'El rol no es valido';
+          uknownError.path = 'token';
+          uknownError.message = 'no hay token';
           return {
             succes: false,
             errors: [uknownError],
@@ -124,32 +139,69 @@ const resolversAvance = {
         };
       }
     },
-
-    editarAvance: async (parent, args) => {
+    eliminarAvance: async (parent, args) => {
       const otherErrors = [];
       try {
-        const usuario = await UserModel.findOne({ _id: args._id });
-        if (usuario.rol === 'ESTUDIANTE') {
-        const avanceEditado = await ModeloAvance.findByIdAndUpdate(
-          args._idAvance,
-          {
-            fecha:Date.now(),
-            descripcion:args.descripcion
-          },
-          { new: true }
-        );
-        if (otherErrors.length) {
-          throw otherErrors;
+        if (Object.keys(args).includes('_id')) {
+          const avanceEliminado = await ModeloAvance.findOneAndDelete({
+            _id: args._id,
+          });
+          return {
+            succes: true,
+            errors: [],
+            avance: avanceEliminado,
+          };
+        } else if (Object.keys(args).includes('nombre')) {
+          const avanceEliminado = await ModeloAvance.findOneAndDelete({
+            nombre: args.nombre,
+          });
+          return {
+            succes: true,
+            errors: [],
+            avance: avanceEliminado,
+          };
         }
+      } catch (error) {
         return {
-          succes: true,
-          errors: [],
-          avance: avanceEditado,
+          succes: false,
+          errors: formatErrors(error, otherErrors),
+          avance: null,
         };
-      }else {
+      }
+    },
+
+    editarAvance: async (parent, args,context) => {
+      const otherErrors = [];
+      try {
+        if (context.userData) {
+          if (context.userData.rol === 'ESTUDIANTE') {
+            const avanceEditado = await ModeloAvance.findByIdAndUpdate(
+              args._idAvance,
+              { ...args.campos },
+              { new: true }
+            );
+            if (otherErrors.length) {
+              throw otherErrors;
+            }
+            return {
+              succes: true,
+              errors: [],
+              avance: avanceEditado,
+            };
+          } else {
+            const uknownError = {};
+            uknownError.path = 'rol';
+            uknownError.message = 'El rol no es valido';
+            return {
+              succes: false,
+              errors: [uknownError],
+              avance: null,
+            };
+          }
+        } else {
           const uknownError = {};
-          uknownError.path = 'rol';
-          uknownError.message = 'El rol no es valido';
+          uknownError.path = 'token';
+          uknownError.message = 'no hay token';
           return {
             succes: false,
             errors: [uknownError],
@@ -197,7 +249,7 @@ const resolversAvance = {
     editarObservacion: async (parent, args) => {
       const otherErrors = [];
       try {
-        const observacionEditado = await ProjectModel.findByIdAndUpdate(
+        const avanceEditado = await ModeloAvance.findByIdAndUpdate(
           args.idAvance,
           {
             $set: {
@@ -213,7 +265,7 @@ const resolversAvance = {
         return {
           succes: true,
           errors: [],
-          avance: observacionEditado,
+          avance: avanceEditado,
         };
       } catch (error) {
         return {
@@ -224,15 +276,16 @@ const resolversAvance = {
       }
     },
 
+    // NO FUNCIONA
     eliminarObservacion: async (parent, args) => {
       const otherErrors = [];
       try {
-        const observacionEliminada = await ProjectModel.findByIdAndUpdate(
+        const observacionEliminado = await ModeloAvance.findByIdAndUpdate(
           { _id: args.idAvance },
           {
             $pull: {
-              objetivos: {
-                _id: args.idObservacion,
+              observaciones: {
+                _id: args.idOb,
               },
             },
           },
@@ -244,7 +297,7 @@ const resolversAvance = {
         return {
           succes: true,
           errors: [],
-          avance: observacionEliminada,
+          avance: observacionEliminado,
         };
       } catch (error) {
         return {
