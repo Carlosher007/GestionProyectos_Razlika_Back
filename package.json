@@ -25,5 +25,13 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
+  },
+  "author": "carlos",
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "engines": {
+    "node": "14.x"
   }
 }
