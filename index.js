@@ -7,6 +7,8 @@ import { tipos } from './graphql/types.js';
 import { resolvers } from './graphql/resolvers.js';
 import { validateToken } from './utils/tokenUtils.js';
 
+
+
 dotenv.config();
 
 const getUserData = (token) => {
